@@ -1,6 +1,6 @@
-# LLMs for Model-driven Engineering: A Survey
+# LLMs for Model-driven Engineering: A Systematic Literature Review
 
-This repository provides artifacts for the Systematic Literature Review (SLR) titled: _LLMs for Model-driven Engineering: A Survey_. 
+This repository provides artifacts for the Systematic Literature Review (SLR) titled: _LLMs for Model-driven Engineering: A Systematic Literature Review_. 
 
 During the SLR, we have the following raw data available:
 * [`initial_search.csv`](data/initial_search.csv): This file contains the complete raw dataset obtained from the initial keyword search. It includes details of the 2,663 primary studies after removing duplicates across different databases.
