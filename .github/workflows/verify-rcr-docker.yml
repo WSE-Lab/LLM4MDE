@@ -1,0 +1,63 @@
+name: Verify RCR Docker image
+on:
+  push:
+    branches: [verification/rcr-docker-20261116]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  reproduce:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Fetch the audited source
+        run: |
+          git clone --branch rcr --single-branch https://github.com/WSE-Lab/LLM4MDE.git source
+          git -C source checkout 16d4fb2c76c403dc1cf15fedd14efac7bcc42223
+          mkdir verification
+          git -C source rev-parse HEAD > verification/source-commit.txt
+      - name: Inspect and run the pinned image offline
+        env:
+          IMAGE: manzh/llm4mde-r@sha256:cb7b99497dd172f03323436949e73be16bff78931675ee3ae3ee7e9c49ff74a9
+        run: |
+          set -o pipefail
+          docker version > verification/docker-version.txt
+          uname -a > verification/host.txt
+          docker pull "$IMAGE" 2>&1 | tee verification/pull.log
+          docker image inspect "$IMAGE" > verification/image-inspect.json
+          docker run --rm --network none "$IMAGE" Rscript -e 'print(sessionInfo()); print(installed.packages()[,c("Package","Version")])' > verification/R-environment.txt 2>&1
+          set +e
+          docker run --name rcr-verification --network none "$IMAGE" > verification/run.log 2>&1
+          result=$?
+          set -e
+          echo "$result" > verification/exit-code.txt
+          docker inspect rcr-verification > verification/container-inspect.json
+          docker cp rcr-verification:/analysis/rcr/generated_files verification/outputs
+          docker cp rcr-verification:/analysis/data/final_selection.csv verification/image-final_selection.csv
+          docker cp rcr-verification:/analysis/rcr/LLM4MDE_SLR.R verification/image-LLM4MDE_SLR.R
+          docker cp rcr-verification:/analysis/rcr/Utils.R verification/image-Utils.R
+          docker rm rcr-verification
+          exit "$result"
+      - name: Check the generated evidence
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import csv, json, hashlib
+          root=Path('verification'); out=root/'outputs'
+          files=sorted(p.name for p in out.iterdir() if p.suffix in ['.pdf','.tex'])
+          data=lambda p:list(csv.DictReader(p.open(encoding='utf-8-sig')))
+          result={'output_count':len(files),'outputs':files,'hitl_bar_present':'RQ12_human_in_the_loop_bar.pdf' in files,'csv_equal':data(root/'image-final_selection.csv')==data(Path('source/data/final_selection.csv'))}
+          result['script_equal']={n:(root/('image-'+n)).read_bytes()==(Path('source/rcr')/n).read_bytes() for n in ['LLM4MDE_SLR.R','Utils.R']}
+          result['output_sha256']={f:hashlib.sha256((out/f).read_bytes()).hexdigest() for f in files}
+          (root/'checks.json').write_text(json.dumps(result,indent=2))
+          print(json.dumps(result,indent=2))
+          assert result['csv_equal'] and all(result['script_equal'].values())
+          assert len(files)>0 and 'RQ1_plot_num_publications_over_year.pdf' in files
+          PY
+      - name: Save validation logs and outputs
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: rcr-docker-verification
+          path: verification/
+          retention-days: 14
