@@ -18,7 +18,7 @@ library(scales)
 
 # ==================== Global variables ====================
 
-PAPERS <- "final_selection.csv"
+PAPERS <- "../data/final_selection.csv"
 
 PAPER_BIB_FILE_PATH <- "llm4MDE.bib"
 
@@ -50,17 +50,10 @@ TOTAL_NUM_SELECTED_PAPERS <- nrow(ALL_SELECTED)
 
 RESULTS_BIBTEX = paste(GENERATED_FILES, "/selected_paper_bib.bib", sep = "")
 
-RESULTS_COLLECTIONS = paste(GENERATED_FILES, "/collection_statistics.tex", sep = "")
-
-RESULTS_CMD = paste(GENERATED_FILES, "/RQ_results.tex", sep = "")
-
 DATABASES = c("IEEE", "ACM", "Scopus", "Wiley", "WoS", "Springer")
 
 DATABASES_FULL_NAME = c("IEEE\\emph{Xplore}", "ACM", "Scopus", "Wiley", "Web of Science", "Springer Nature Link")
 
-DATABASES_INITAL = c(179, 66, 845, 0, 706, 932)
-
-DATABASES_INTIAL_TOTAL = 2066
 
 FULL_DATABASES = c("IEEE", "ACM", "Scopus", "Web", "Springer", "Wiley", "Arxiv")
 
@@ -85,23 +78,6 @@ category_mapping <- list(`Transportation Systems` = c("Automotive Systems", "ADS
         "Public administration"), `Education Systems` = c("Education"), `Healthcare Systems` = c("Healthcare"), 
     `General Systems` = c("General"))
 
-application_domain_category_definition_mapping <- list(`Transportation Systems` = "Systems concerned with transportation, mobility, and vehicle operation, including automotive, driver-assistance, train control, and autonomous driving systems.", 
-    `Aerospace Systems` = "Systems used in aviation, spacecraft, and broader aerospace contexts where modeling supports design, operation, analysis, or assurance of aerospace artifacts.", 
-    `Computing and Digital Systems` = "Software-intensive and cyber-physical digital systems, including cloud, embedded, networked, IoT, CPS, digital twin, robotic, adaptive, and smart-device systems.", 
-    `Energy and Power Systems` = "Systems related to energy production, delivery, monitoring, or operation, including electric power industry applications.", 
-    `Business and Enterprise Systems` = "Systems that support business processes, organizational operations, enterprise workflows, or enterprise-level digital transformation.", 
-    `Governance and Public Systems` = "Systems used for public administration, governance, emergency response, crisis management, or services operated in public-sector contexts.", 
-    `Education Systems` = "Systems and applications used in educational settings, including learning, teaching, training, and educational support scenarios.", 
-    `Healthcare Systems` = "Systems and applications used in healthcare contexts, including clinical, medical, patient-care, and health-service scenarios.", 
-    `General Systems` = "General-purpose or domain-independent systems where no specific application domain is identified.")
-
-model_type_category_definition_mapping <- list(`Requirement/\nGoal` = "Models that capture desired system capabilities, stakeholder intentions, usage scenarios, problems, or goals that motivate system development.", 
-    Behavior = "Models that describe dynamic system behavior, including processes, activities, interactions, states, event sequences, communication, timing, data or control flows, and executable graphs.", 
-    `Structure/\nArchitecture` = "Models that describe static system, software, or business organization, including entities, relationships, architectural elements, components, packages, deployments, contexts, multi-level structures, and value structures.", 
-    `Knowledge/\nDomain` = "Models that capture domain knowledge, concepts, classifications, or domain-specific abstractions, including ontologies, taxonomies, and domain-specific models.", 
-    Constraint = "Models that specify rules, restrictions, contracts, or conditions that must hold for a system, process, or generated artifact.", 
-    Verification = "Models used to support validation, verification, assurance, or testing, including assurance cases, safety cases and test scenarios.", 
-    Others = "Model types that do not fit the preceding categories or represent specialized modeling purposes such as causal reasoning, crash descriptions, crisis management or task specification.")
 
 metric_category_mapping <- list(`LLM-based solution metrics` = c("Accuracy", "Precision", "Precision@k", "Recall", 
     "Recall@k", "F-measure", "F-measure@k", "Macro F1", "Soft F-measure", "Soft precision", "Soft recall", "BLEU", 
@@ -185,18 +161,13 @@ group1Analysis <- function() {
 
 group2Analysis <- function() {
     modelAnalysis(6)
-    mdeAnalysis(5)
     setask_mdetask_stacked_bar(5)
     setask_mdetask_table(5)
-    model_generation(5)
     mdetask_modellanguage(6)
-    models_modellanguage(5)
-    model_generation_modellanguage(5)
     mdetask_modellanguage_modeltype_grouped_heatmap(DATA_TO_ANALYSIS, 6, first_width = 9, first_height = 11, first_wrap_task_label_width = 17,
         first_wrap_task_label = TRUE, second_width = 11, second_height = 15, second_tasks_per_row = 4, second_last_row_tasks = 5, 
         second_wrap_task_label_width = 20, second_wrap_task_label = TRUE)
     seAnalysis(6)
-    application_domain_category_definition(7)
     application(data = DATA_TO_ANALYSIS, 7, label = "")
 }
 
@@ -206,14 +177,12 @@ group3Analysis <- function() {
     llm_used(8)
     llm_pipeline(8)
     prompt_techniques(9)
-    integration(11)
     integration_model_type(11, function(x) {
         return(x > 1)
     }, "_one")
     integration_model_type(11, function(x) {
         return(x == 1)
     }, "_GT1")
-    human_in_loop(12)
     human_in_loop_table(12)
     LLM_enhanced(10)
 }
@@ -228,10 +197,8 @@ group4Analysis <- function() {
         second_tasks_per_row = 7, second_last_row_tasks = 7, second_wrap_task_label_width = 16, second_wrap_task_label = TRUE)
     benchmark_vs_proposed_problems(13)
     baselines(15)
-    benchmarks(15)
     replication(16)
     benchmarks_comparison(13)
-    benchmarks_problems(13)
     application(data = Benchmarks_PAPERS, 13, label = "_benchmarks")
 }
 
@@ -293,8 +260,6 @@ rq2and3 <- function() {
     }
     data <- data.frame(venue = venues, venueType = trimws(venuetypes), venueAKA = rename_venues, value = nums)
     rq2Table(data)
-    rq3VenueType()
-    rq3PaperType()
 }
 
 rq2And3StackedBar <- function() {
@@ -309,31 +274,10 @@ rq2And3StackedBar <- function() {
 
 modelAnalysis <- function(rqNum) {
     modelinglanguage(rqNum)
-    modelType(rqNum)
-    modelCategory(rqNum)
-    model_type_category_definition(rqNum)
     model_type_category(rqNum)
     model_type_category_table(rqNum)
 }
 
-mdeAnalysis <- function(rqNum) {
-    MDEtasks <- removeItems(extractAll(DATA_TO_ANALYSIS$RQ5.MDETask), c("N/A"))
-    orderBarFile <- paste("RQ", rqNum, "_MDE_tasks", sep = "")
-    orderBarChart(data = MDEtasks, xLabel = "Number of papers associated with each MDE Tasks", yLabel = "MDE Tasks", 
-        orderBarFile, width = 14, height = 8, coord_fixed_ratio = 2.5)
-    freq_df <- as.data.frame(table(MDEtasks))
-    freq_df <- freq_df[order(freq_df$Freq, decreasing = TRUE), ]
-    RQ_label <- RQ_label_prefix(rqNum)
-    for (i in 1:min(4, nrow(freq_df))) {
-        RQ_results <<- rbind(RQ_results, c(RQ_label, paste("top", formatString(nom_ord(strtoi(i))), "MDETaskNum", 
-            sep = ""), freq_df$Freq[i]))
-        RQ_results <<- rbind(RQ_results, c(RQ_label, paste("top", formatString(nom_ord(strtoi(i))), "MDETask", 
-            sep = ""), emphExp(as.character(freq_df$MDETasks)[i])))
-        RQ_results <<- rbind(RQ_results, c(RQ_label, paste("percentTop", formatString(nom_ord(strtoi(i))), "MDETaskNum", 
-            sep = ""), paste(formatC((freq_df$Freq[i]) * 100/TOTAL_NUM_SELECTED_PAPERS, digits = 2, format = "f"), 
-            "\\%", sep = "")))
-    }
-}
 
 setask_mdetask_stacked_bar <- function(rqNum, data = DATA_TO_ANALYSIS) {
     setask_mdetask_col <- "RQ5.SETaskMDETask"
@@ -485,29 +429,6 @@ setask_mdetask_table <- function(rqNum, data = DATA_TO_ANALYSIS) {
     return(task_summary)
 }
 
-model_generation <- function(rqNum) {
-    df <- DATA_TO_ANALYSIS %>% select(ID = ID, MDETask = RQ5.MDETask, SubTask = RQ4.Sub.category.of.model.generation) %>% 
-        filter(grepl("Model generation", MDETask)) %>% mutate(SubTask = str_replace_all(SubTask, "\\u2013|\\u2014", 
-        "-")) %>% separate_rows(SubTask, sep = ";") %>% mutate(SubTask = str_squish(SubTask)) %>% filter(!is.na(SubTask), 
-        SubTask != "", !(tolower(SubTask) %in% c("n/a", "unspecified", "null"))) %>% distinct(ID, SubTask)
-    model_generation_summary <- df %>% count(SubTask, sort = TRUE)
-    TABLE = paste(GENERATED_FILES, "/RQ", rqNum, "_model_generation.tex", sep = "")
-    unlink(TABLE)
-    sink(TABLE, append = TRUE, split = TRUE)
-    cat("\\begin{tabular} { p{0.34\\textwidth} p{0.05\\textwidth} p{0.60\\textwidth} } \\\\ \n")
-    cat("\\toprule \n")
-    cat("Modeling & \\# & Papers\\\\ \n")
-    cat("\\midrule  \n")
-    for (i in 1:nrow(model_generation_summary)) {
-        modeling <- model_generation_summary$SubTask[i]
-        modeling_data <- subset(df, df$SubTask == modeling)
-        cat(modeling, " & ", model_generation_summary$n[i], " & ", getCitations(modeling_data), "\\\\ \n", sep = "")
-    }
-    cat("\\bottomrule \n")
-    cat("\\end{tabular} \n")
-    sink()
-}
-
 mdetask_modellanguage <- function(rqNum) {
     df <- DATA_TO_ANALYSIS %>% select(ID = ID, MDETask = RQ5.MDETask, ModelLanguage = RQ6.ModelingLanguage)
     frequency_table <- pmap_dfr(list(df$ID, df$MDETask, df$ModelLanguage), expand_and_flatten, id_col = "ID", metric_col = "MDETask", 
@@ -518,88 +439,7 @@ mdetask_modellanguage <- function(rqNum) {
     plot_mde_heatmap(frequency_table, "Modeling Language", "MDE Task", fileName = filename, width = 8, height = 8)
 }
 
-models_modellanguage <- function(rqNum) {
-    df <- DATA_TO_ANALYSIS %>% select(ID = ID, ML2Model = RQ6.ModelingLanguageModelType)
-    parse_model_language_model_type <- function(id, ml2model) {
-        if (is.na(ml2model) || trimws(ml2model) == "") 
-            return(NULL)
-        matches <- str_match_all(ml2model, "\\[([^:\\]]+)\\s*:\\s*([^\\]]+)\\]")[[1]]
-        if (nrow(matches) == 0) 
-            return(NULL)
-        pmap_dfr(list(matches[, 2], matches[, 3]), function(model_language, model_types) {
-            types <- str_split(model_types, ";")[[1]] %>% str_trim() %>% .[. != ""]
-            tibble(ID = id, ModelLanguage = str_trim(model_language), ModelType = types)
-        })
-    }
-    frequency_table <- pmap_dfr(list(df$ID, df$ML2Model), parse_model_language_model_type) %>% filter(!is.na(ModelLanguage), 
-        !is.na(ModelType), !(tolower(ModelLanguage) %in% c("n/a", "unspecified", "null")), !(tolower(ModelType) %in% 
-            c("n/a", "unspecified", "null"))) %>% count(ModelType, ModelLanguage)
-    mapping_df <- stack(model_type_category_mapping) %>% select(ModelType = values, Category = ind) %>% mutate(Category = as.character(Category), 
-        CategoryOrder = as.integer(factor(Category, levels = names(model_type_category_mapping))), TypeOrder = row_number())
-    frequency_table <- frequency_table %>% left_join(mapping_df, by = "ModelType") %>% mutate(Category = replace_na(Category, 
-        "Unclassified"), CategoryOrder = replace_na(CategoryOrder, length(model_type_category_mapping) + 1L), TypeOrder = if_else(is.na(TypeOrder), 
-        max(mapping_df$TypeOrder, na.rm = TRUE) + row_number(), TypeOrder)) %>% group_by(ModelType) %>% mutate(ModelTypeTotal = sum(n)) %>% 
-        ungroup() %>% group_by(ModelLanguage) %>% mutate(ModelLanguageTotal = sum(n)) %>% ungroup() %>% arrange(CategoryOrder, 
-        TypeOrder, desc(ModelTypeTotal), ModelType)
-    model_type_levels <- rev(unique(frequency_table$ModelType))
-    model_language_levels <- frequency_table %>% distinct(ModelLanguage, ModelLanguageTotal) %>% arrange(desc(ModelLanguageTotal), 
-        ModelLanguage) %>% pull(ModelLanguage)
-    frequency_table <- frequency_table %>% mutate(Category = factor(Category, levels = c(names(model_type_category_mapping), 
-        "Unclassified")), ModelType = factor(ModelType, levels = model_type_levels), ModelLanguage = factor(ModelLanguage, 
-        levels = model_language_levels))
-    filename <- paste("RQ", rqNum, "_model_language_model_type_heatmap", sep = "")
-    p <- ggplot(frequency_table, aes(x = ModelLanguage, y = ModelType, fill = n)) + geom_tile(color = "white", 
-        linewidth = 0.3) + geom_text(aes(label = n), color = "white", size = 3) + scale_fill_viridis_c() + facet_grid(Category ~ 
-        ., scales = "free_y", space = "free_y") + theme_minimal() + labs(x = "Modeling Language", y = "Model Type", 
-        fill = "Count") + theme(axis.text.x = element_text(angle = 45, hjust = 1), strip.text.y = element_text(angle = 0, 
-        face = "bold"), panel.spacing.y = unit(0.15, "lines"), panel.border = element_rect(color = "grey50", fill = NA, 
-        linetype = "dashed", linewidth = 0.4))
-    print(p)
-    ggsave(paste0(GENERATED_FILES, "/", filename, ".pdf"), plot = p, width = 10, height = 9)
-    return(p)
-}
 
-model_generation_modellanguage <- function(rqNum) {
-    df <- DATA_TO_ANALYSIS %>% select(ID = ID, MDETask = RQ5.MDETask, ML2Model = RQ6.ModelingLanguageModelType) %>% 
-        filter(grepl("Model generation", MDETask))
-    parse_model_language_model_type <- function(id, ml2model) {
-        if (is.na(ml2model) || trimws(ml2model) == "") 
-            return(NULL)
-        matches <- str_match_all(ml2model, "\\[([^:\\]]+)\\s*:\\s*([^\\]]+)\\]")[[1]]
-        if (nrow(matches) == 0) 
-            return(NULL)
-        pmap_dfr(list(matches[, 2], matches[, 3]), function(model_language, model_types) {
-            types <- str_split(model_types, ";")[[1]] %>% str_trim() %>% .[. != ""]
-            tibble(ID = id, ModelLanguage = str_trim(model_language), ModelType = types)
-        })
-    }
-    frequency_table <- pmap_dfr(list(df$ID, df$ML2Model), parse_model_language_model_type) %>% filter(!is.na(ModelLanguage), 
-        !is.na(ModelType), !(tolower(ModelLanguage) %in% c("n/a", "unspecified", "null")), !(tolower(ModelType) %in% 
-            c("n/a", "unspecified", "null"))) %>% distinct(ID, ModelType, ModelLanguage) %>% count(ModelType, ModelLanguage)
-    mapping_df <- stack(model_type_category_mapping) %>% select(ModelType = values, Category = ind) %>% mutate(Category = as.character(Category), 
-        CategoryOrder = as.integer(factor(Category, levels = names(model_type_category_mapping))), TypeOrder = row_number())
-    frequency_table <- frequency_table %>% left_join(mapping_df, by = "ModelType") %>% mutate(Category = replace_na(Category, 
-        "Unclassified"), CategoryOrder = replace_na(CategoryOrder, length(model_type_category_mapping) + 1L), TypeOrder = if_else(is.na(TypeOrder), 
-        max(mapping_df$TypeOrder, na.rm = TRUE) + row_number(), TypeOrder)) %>% group_by(ModelType) %>% mutate(ModelTypeTotal = sum(n)) %>% 
-        ungroup() %>% group_by(ModelLanguage) %>% mutate(ModelLanguageTotal = sum(n)) %>% ungroup() %>% arrange(CategoryOrder, 
-        TypeOrder, desc(ModelTypeTotal), ModelType)
-    model_type_levels <- rev(unique(frequency_table$ModelType))
-    model_language_levels <- frequency_table %>% distinct(ModelLanguage, ModelLanguageTotal) %>% arrange(desc(ModelLanguageTotal), 
-        ModelLanguage) %>% pull(ModelLanguage)
-    frequency_table <- frequency_table %>% mutate(Category = factor(Category, levels = c(names(model_type_category_mapping), 
-        "Unclassified")), ModelType = factor(ModelType, levels = model_type_levels), ModelLanguage = factor(ModelLanguage, 
-        levels = model_language_levels))
-    filename <- paste("RQ", rqNum, "_model_generation_model_language_model_type_heatmap", sep = "")
-    p <- ggplot(frequency_table, aes(x = ModelLanguage, y = ModelType, fill = n)) + geom_tile(color = "white", 
-        linewidth = 0.3) + geom_text(aes(label = n), color = "white", size = 3) + scale_fill_viridis_c() + facet_grid(Category ~ 
-        ., scales = "free_y", space = "free_y") + theme_minimal() + labs(x = "Modeling Language", y = "Model Type", 
-        fill = "Count") + theme(axis.text.x = element_text(angle = 45, hjust = 1), strip.text.y = element_text(angle = 0, 
-        face = "bold"), panel.spacing.y = unit(0.15, "lines"), panel.border = element_rect(color = "grey50", fill = NA, 
-        linetype = "dashed", linewidth = 0.4))
-    print(p)
-    ggsave(paste0(GENERATED_FILES, "/", filename, ".pdf"), plot = p, width = 10, height = 9)
-    return(p)
-}
 
 mdetask_modellanguage_modeltype_grouped_heatmap <- function(df, rqNum, main_tasks = c("Model generation", "Model comprehension", 
     "Model analysis"), first_width = 11, first_height = 13, first_wrap_task_label_width = 17, first_wrap_task_label = FALSE, 
@@ -761,25 +601,6 @@ seAnalysis <- function(rqNum = 5) {
     seTable(df, rqNum)
 }
 
-application_domain_category_definition <- function(rqNum) {
-    TABLE = paste(GENERATED_FILES, "/RQ", rqNum, "_application_domain_category_definitions.tex", sep = "")
-    unlink(TABLE)
-    sink(TABLE, append = TRUE, split = TRUE)
-    cat("\\begin{tabular} { p{0.32\\textwidth} p{0.69\\textwidth} } \\\\ \n")
-    cat("\\toprule \n")
-    cat("Category & Definition\\\\ \n")
-    cat("\\midrule  \n")
-    for (category in names(category_mapping)) {
-        definition <- application_domain_category_definition_mapping[[category]]
-        if (is.null(definition)) {
-            definition <- "-"
-        }
-        cat(clean_text_4latex(category), " & ", clean_text_4latex(definition), "\\\\ \n", sep = "")
-    }
-    cat("\\bottomrule \n")
-    cat("\\end{tabular} \n")
-    sink()
-}
 
 application <- function(data = DATA_TO_ANALYSIS, rqNum, label = "") {
     data_selected <- data %>% select(RQ7.ApplicationDomain, ID) %>% dplyr::rename(Category = RQ7.ApplicationDomain) %>% 
@@ -828,8 +649,7 @@ llm_foundation_model <- function(rqNum) {
     data_new <- data.frame(category = data_summary$data, value = data_summary$Freq)
     RQ_label <- RQ_label_prefix(rqNum)
     collectRQResults(data_summary, RQ_label)
-    pieChartFile <- paste("RQ", rqNum, "_foundation_models_pie", sep = "")
-    pieChart(pieChartFile, data_new, summarizedData = TRUE, w = 10, h = 8)
+   
     data_summary <- otherInSummary(data, NULL)
     data <- data.frame(Items = data_summary$data, Freq = data_summary$Freq)
     barFile <- paste("RQ", rqNum, "_foundation_models_bar", sep = "")
@@ -977,57 +797,6 @@ prompt_techniques <- function(rqNum) {
     upsetPlot_complex(set_list = set_list, fileName = prefix, height = 12)
 }
 
-integration <- function(rqNum) {
-    df <- DATA_TO_ANALYSIS %>% select(ID, task = RQ5.MDETask, tool = RQ11.Integration)
-    result <- df %>% filter(containValidValue(tool)) %>% mutate(task = str_split(task, ";\\s*"), tool = str_split(tool, 
-        "(?<=\\]);\\s*(?=\\[)")) %>% unnest(c(task, tool)) %>% mutate(tool = str_replace_all(tool, "\\[|\\]", ""), 
-        tool = str_split(tool, ";\\s*")) %>% unnest(tool) %>% filter(containValidValue(tool)) %>% select(ID, MDETask = task, 
-        IntegrationFramework = tool)
-    sorted_result <- result %>% group_by(IntegrationFramework) %>% mutate(framework_freq = n()) %>% group_by(IntegrationFramework, 
-        MDETask) %>% mutate(task_freq = n()) %>% ungroup() %>% arrange(desc(framework_freq), IntegrationFramework, 
-        desc(task_freq), MDETask)
-    id_ml_df <- DATA_TO_ANALYSIS %>% select(ID, ModelingLanguage = RQ6.ModelingLanguage)
-    TABLE = paste(GENERATED_FILES, "/RQ", rqNum, "_integration.tex", sep = "")
-    unlink(TABLE)
-    sink(TABLE, append = TRUE, split = TRUE)
-    cat("\\begin{tabular} { p{0.02\\textwidth} p{0.45\\textwidth} p{0.35\\textwidth} p{0.48\\textwidth} } \\\\ \n")
-    cat("\\toprule \n")
-    cat(" & Tool (\\#) & MDE Task (\\#) & Modeling Language (\\#) Papers \\\\ \n")
-    cat("\\midrule  \n")
-    tools <- unique(sorted_result$IntegrationFramework)
-    index <- 1
-    ntools <- length(tools)
-    col_index <- 1
-    for (tool in tools) {
-        if (col_index%%2 == 0) 
-            cat("\\rowcolor{gray!15} \n")
-        tasks <- subset(sorted_result, sorted_result$IntegrationFramework == tool)
-        cat(index, "& ", tool, " (", length(unique(tasks$ID)), ")", sep = "")
-        task_index <- 1
-        for (task in unique(tasks$MDETask)) {
-            if (task_index > 1) {
-                if (col_index%%2 == 0) 
-                  cat("\\rowcolor{gray!15} \n")
-                cat(" & ")
-            }
-            col_index <- col_index + 1
-            task_df <- subset(tasks, tasks$MDETask == task)
-            cat(" & ", clean_text_4latex(task), " (", length(unique(task_df$ID)), ")", sep = "")
-            filtered_df <- id_ml_df %>% filter(ID %in% task_df$ID)
-            citation_summary <- filtered_df %>% separate_rows(ModelingLanguage, sep = ";") %>% mutate(ModelingLanguage = str_trim(ModelingLanguage)) %>% 
-                filter(ModelingLanguage != "" & !is.na(ModelingLanguage)) %>% group_by(ModelingLanguage) %>% summarise(Count = n(), 
-                Citations = getCitations(ID, onlyID = TRUE), .groups = "drop") %>% arrange(desc(Count)) %>% mutate(FormattedModelingLanguage = paste0("\\textbf{", 
-                ModelingLanguage, "}", sep = "")) %>% mutate(Formatted = str_glue("{FormattedModelingLanguage} ({Count}) {Citations}"))
-            output_text <- citation_summary %>% pull(Formatted) %>% paste(collapse = ", ")
-            cat(" & ", output_text, "\\\\ \n", sep = "")
-            task_index <- task_index + 1
-        }
-        index <- index + 1
-    }
-    cat("\\bottomrule \n")
-    cat("\\end{tabular} \n")
-    sink()
-}
 
 integration_model_type <- function(rqNum, stop_function, suffix = "") {
     TABLE <- paste0(GENERATED_FILES, "/RQ", rqNum, "_integration_modeltype", suffix, ".tex")
@@ -1095,32 +864,6 @@ integration_model_type <- function(rqNum, stop_function, suffix = "") {
     sink()
 }
 
-human_in_loop <- function(rqNum) {
-    df <- DATA_TO_ANALYSIS %>% select(ID, RQ12.InteractionPattern, RQ12.AdditionalInformation)
-    sub_df_sorted <- df %>% filter(containValidValue(RQ12.InteractionPattern)) %>% group_by(RQ12.InteractionPattern) %>% 
-        mutate(frequency = n()) %>% ungroup() %>% arrange(desc(frequency), RQ12.InteractionPattern)
-    TABLE = paste(GENERATED_FILES, "/RQ", rqNum, "_human_in_the_loop.tex", sep = "")
-    unlink(TABLE)
-    sink(TABLE, append = TRUE, split = TRUE)
-    cat("\\begin{tabular} { p{0.07\\textwidth} p{0.2\\textwidth} p{0.7\\textwidth} } \\\\ \n")
-    cat("\\toprule \n")
-    cat("Paper & Interaction & Description\\\\ \n")
-    cat("\\midrule  \n")
-    for (i in 1:nrow(sub_df_sorted)) {
-        cat(getCitations(sub_df_sorted$ID[i], onlyID = TRUE), " & ", str_to_title(sub_df_sorted$RQ12.InteractionPattern[i]), 
-            " & ", sub_df_sorted$RQ12.AdditionalInformation[i], "\\\\ \n", sep = "")
-    }
-    cat("\\bottomrule \n")
-    cat("\\end{tabular} \n")
-    sink()
-    Items <- extractAllWithGroup(sub_df_sorted$RQ12.InteractionPattern)
-    freq_num <- as.data.frame(table(Items))
-    freq_num <- freq_num[order(freq_num$Items, decreasing = FALSE), ]
-    barChartFile <- paste("RQ", rqNum, "_human_in_the_loop_bar", sep = "")
-    barChart(freq_num, xLabel = "Type of Interaction Pattern", yLabel = "# of Papers", fileName = barChartFile, 
-        reorderBasedOnFreq = TRUE, axisXAngle = 0, axisHjust = 0.5, axisVjust = 0.5, barwidth = 0.3, width = 8, 
-        height = 4)
-}
 
 human_in_loop_table <- function(rqNum, data = DATA_TO_ANALYSIS) {
     interaction_papers <- data %>% select(ID, Interaction = RQ12.InteractionPattern) %>% filter(containValidValue(Interaction)) %>% 
@@ -1147,7 +890,7 @@ human_in_loop_table <- function(rqNum, data = DATA_TO_ANALYSIS) {
 
 LLM_enhanced <- function(rqNum) {
     df <- DATA_TO_ANALYSIS %>% select(ID, Technique = RQ10.EnhancementTechnique, Model = RQ10.EnhancedLLM, ModelTask = RQ5.MDETask, 
-        ModelingLanguage = RQ6.ModelingLanguage) %>% filter(!is.na(Technique), !(Technique %in% c("N/A", "Unspecified")))
+        ModelingLanguage = RQ6.ModelingLanguage) %>% filter(!is.na(Technique), !(Technique %in% c("N/A", "Unspecified", "[No]")))
     enhanced_model_clean_and_flatten_df <- pmap_dfr(list(df$ID, df$Technique, df$Model), clean_and_flatten_copy, 
         id_col = "ID", metric_col = "Technique", norm_col = "Model") %>% filter(!is.na(Technique), !(Technique %in% 
         c("N/A", "Unspecified")), !is.na(Model), !(Model %in% c("N/A", "Unspecified")))
@@ -1390,20 +1133,6 @@ baselines <- function(rqNum) {
         width = 12, height = 7)
 }
 
-benchmarks <- function(rqNum) {
-    df <- ALL_SELECTED %>% select(ID, BenchmarkType = RQ16.EvaluationSubjectType)
-    non_cs <- subset(df, !containValidValue(df$BenchmarkType, extraExclude = c("no")))
-    only_closed <- subset(df, trimws(df$BenchmarkType) == "Closed")
-    has_open <- subset(df, grepl("Open", df$BenchmarkType))
-    industrial_open_cs <- subset(df, grepl("industrial - open", tolower(df$BenchmarkType)))
-    industrial_closed_cs <- subset(df, grepl("industrial - closed", tolower(df$BenchmarkType)))
-    results <- data.frame(Items = c("None", "Closed Non-Industrial CS", "Open Non-Industrial CS", "Open Industrial CS", 
-        "Closed Industrial CS"), Freq = c(nrow(non_cs), nrow(only_closed), nrow(has_open), nrow(industrial_open_cs), 
-        nrow(industrial_closed_cs)))
-    barChartFile <- paste("RQ", rqNum, "_benchmark_summary_bar", sep = "")
-    barChart(results, xLabel = "Type of Benchmarks and Datesets", yLabel = "# of Papers", fileName = barChartFile, 
-        reorderBasedOnFreq = TRUE, axisXAngle = 45, axisHjust = 1, axisVjust = 1)
-}
 
 replication <- function(rqNum) {
     df <- ALL_SELECTED %>% select(ID, Replication = RQ16.AvailableComponents) %>% filter(containValidValue(Replication))
@@ -1556,97 +1285,6 @@ benchmarks_comparison <- function(rqNum) {
     sink()
 }
 
-benchmarks_problems <- function(rqNum) {
-    df <- Benchmarks_PAPERS %>% select(ID, MDETask = RQ5.MDETask, SEActivity = RQ4.SEActivity, SETask = RQ4.SETask, 
-        ModelingLanguageModelType = RQ6.ModelingLanguageModelType, ApplicationDomain = RQ7.ApplicationDomain)
-    expand_benchmark_field <- function(data, raw_col, item_col = "Item") {
-        data %>% select(ID, Raw = {
-            {
-                raw_col
-            }
-        }) %>% filter(containValidValue(Raw)) %>% mutate(Item = str_replace_all(Raw, "\\[|\\]", "")) %>% separate_rows(Item, 
-            sep = ";\\s*") %>% mutate(Item = str_squish(Item)) %>% filter(!is.na(Item), Item != "", !(tolower(Item) %in% 
-            c("n/a", "unspecified", "null"))) %>% distinct(ID, Item) %>% rename_with(~item_col, .cols = Item)
-    }
-    parse_model_language_model_type <- function(id, raw_value) {
-        if (!containValidValue(raw_value)) 
-            return(NULL)
-        matches <- str_match_all(raw_value, "\\[([^:\\]]+)\\s*:\\s*([^\\]]+)\\]")[[1]]
-        if (nrow(matches) == 0) 
-            return(NULL)
-        pmap_dfr(list(matches[, 2], matches[, 3]), function(model_language, model_types) {
-            types <- str_split(model_types, ";\\s*")[[1]] %>% str_trim() %>% .[. != ""] %>% .[!(tolower(.) %in% 
-                c("n/a", "unspecified", "null"))]
-            tibble(ID = id, ModelingLanguage = str_squish(model_language), ModelType = types)
-        }) %>% filter(!is.na(ModelingLanguage), ModelingLanguage != "", !(tolower(ModelingLanguage) %in% c("n/a", 
-            "unspecified", "null"))) %>% distinct(ID, ModelingLanguage, ModelType)
-    }
-    language_model_type_df <- pmap_dfr(list(df$ID, df$ModelingLanguageModelType), parse_model_language_model_type)
-    old_table <- paste(GENERATED_FILES, "/RQ", rqNum, "_benchmarks_problems.tex", sep = "")
-    unlink(old_table)
-    se_pairs <- df %>% select(ID, SEActivity, SETask) %>% filter(containValidValue(SEActivity), containValidValue(SETask)) %>% 
-        mutate(SEActivity = str_replace_all(SEActivity, "\\[|\\]", ""), SETask = str_replace_all(SETask, "\\[|\\]", 
-            "")) %>% separate_rows(SEActivity, sep = ";\\s*") %>% separate_rows(SETask, sep = ";\\s*") %>% mutate(SEActivity = str_squish(SEActivity), 
-        SETask = str_squish(SETask)) %>% filter(!is.na(SEActivity), !is.na(SETask), SEActivity != "", SETask != 
-        "", !(tolower(SEActivity) %in% c("n/a", "unspecified", "null", "unspecified context")), !(tolower(SETask) %in% 
-        c("n/a", "unspecified", "null"))) %>% distinct(ID, SEActivity, SETask)
-    se_summary <- se_pairs %>% group_by(SEActivity, SETask) %>% summarise(PaperNum = n_distinct(ID), Papers = getCitations(ID, 
-        onlyID = TRUE), .groups = "drop") %>% group_by(SEActivity) %>% mutate(ActivityTotal = sum(PaperNum)) %>% 
-        ungroup() %>% arrange(desc(ActivityTotal), SEActivity, desc(PaperNum), SETask)
-    TABLE = paste(GENERATED_FILES, "/RQ", rqNum, "_benchmarks_se.tex", sep = "")
-    unlink(TABLE)
-    sink(TABLE, append = TRUE, split = TRUE)
-    cat("\\begin{tabular} { p{0.22\\textwidth} p{0.26\\textwidth} p{0.04\\textwidth} p{0.58\\textwidth} } \\\\ \n")
-    cat("\\toprule \n")
-    cat("SE Activity & SE Task & \\# & Papers\\\\ \n")
-    for (activity in unique(se_summary$SEActivity)) {
-        activity_df <- se_summary %>% filter(SEActivity == activity)
-        cat("\\midrule  \n")
-        for (i in seq_len(nrow(activity_df))) {
-            activity_label <- ifelse(i == 1, formatTitleName(activity), "")
-            cat(clean_text_4latex(activity_label), " & ", emphExp(clean_text_4latex(formatTitleName(formatTaskName(activity_df$SETask[i])))), 
-                " & ", activity_df$PaperNum[i], " & ", activity_df$Papers[i], "\\\\ \n", sep = "")
-        }
-    }
-    cat("\\bottomrule \n")
-    cat("\\end{tabular} \n")
-    sink()
-    mde_df <- expand_benchmark_field(df, MDETask, "MDETask")
-    modeling_pairs <- mde_df %>% inner_join(language_model_type_df, by = "ID", relationship = "many-to-many") %>% 
-        distinct(ID, MDETask, ModelingLanguage, ModelType)
-    modeling_summary <- modeling_pairs %>% group_by(MDETask, ModelingLanguage, ModelType) %>% summarise(PaperNum = n_distinct(ID), 
-        Papers = getCitations(ID, onlyID = TRUE), .groups = "drop") %>% left_join(modeling_pairs %>% group_by(MDETask) %>% 
-        summarise(MDETaskPaperNum = n_distinct(ID), .groups = "drop"), by = "MDETask") %>% group_by(MDETask) %>% 
-        mutate(MDETaskTotal = sum(PaperNum)) %>% ungroup() %>% group_by(MDETask, ModelingLanguage) %>% mutate(LanguageTotal = sum(PaperNum)) %>% 
-        ungroup() %>% arrange(desc(MDETaskTotal), MDETask, desc(LanguageTotal), ModelingLanguage, desc(PaperNum), 
-        ModelType)
-    TABLE = paste(GENERATED_FILES, "/RQ", rqNum, "_benchmarks_modeling.tex", sep = "")
-    unlink(TABLE)
-    sink(TABLE, append = TRUE, split = TRUE)
-    cat("\\begin{tabular} { p{0.35\\textwidth} p{0.19\\textwidth} p{0.24\\textwidth} p{0.02\\textwidth} p{0.30\\textwidth} } \\\\ \n")
-    cat("\\toprule \n")
-    cat("MDE Task & Modeling Language & Model Type & \\# & Papers\\\\ \n")
-    cat("\\midrule  \n")
-    for (mde_task in unique(modeling_summary$MDETask)) {
-        task_df <- modeling_summary %>% filter(MDETask == mde_task)
-        for (language in unique(task_df$ModelingLanguage)) {
-            language_df <- task_df %>% filter(ModelingLanguage == language)
-            for (i in seq_len(nrow(language_df))) {
-                task_label <- ifelse(language == unique(task_df$ModelingLanguage)[1] && i == 1, paste0(mde_task, 
-                  " (", language_df$MDETaskPaperNum[i], ")"), "")
-                language_label <- ifelse(i == 1, language, "")
-                cat(clean_text_4latex(task_label), " & ", clean_text_4latex(language_label), " & ", clean_text_4latex(language_df$ModelType[i]), 
-                  " & ", language_df$PaperNum[i], " & ", language_df$Papers[i], "\\\\ \n", sep = "")
-            }
-        }
-        if (mde_task != tail(unique(modeling_summary$MDETask), 1)) 
-            cat("\\midrule \n")
-    }
-    cat("\\bottomrule \n")
-    cat("\\end{tabular} \n")
-    sink()
-}
-
 rq2Table <- function(data) {
     RQ2_label <- RQ_label_prefix(2)
     for (v in sort(unique(data$venueType))) {
@@ -1683,25 +1321,6 @@ rq2Table <- function(data) {
     sink()
 }
 
-rq3VenueType <- function() {
-    rqNum <- 3
-    RQ3_label <- RQ_label_prefix(3)
-    Items <- trimws(ALL_SELECTED$RQ3.VenueType)
-    freq_venuetype <- as.data.frame(table(Items))
-    freq_venuetype <- freq_venuetype[order(freq_venuetype$Items, decreasing = FALSE), ]
-    barChartFile <- paste("RQ", rqNum, "_venue_type_bar", sep = "")
-    barChart(freq_venuetype, xLabel = "Type of Venue", yLabel = "# of Papers", fileName = barChartFile, reorderBasedOnFreq = TRUE, 
-        width = 8, height = 6, axisXAngle = 0, axisHjust = 0.5, axisVjust = 0.2, barwidth = 0.2)
-}
-
-rq3PaperType <- function() {
-    ptypes <- sort(unique(ALL_SELECTED$RQ3.PaperType))
-    paperTypeSummary <- ALL_SELECTED %>% count(RQ3.PaperType, name = "amount")
-    RQ3_label <- RQ_label_prefix(3)
-    collectRQResults(paperTypeSummary, RQ3_label)
-    data <- data.frame(category = paperTypeSummary$RQ3.PaperType, value = paperTypeSummary$amount)
-    pieChart("RQ3_paper_type", data, summarizedData = TRUE, w = 6, h = 7)
-}
 
 modelinglanguage <- function(rqNum) {
     Language <- removeItems(extractAll(DATA_TO_ANALYSIS$RQ6.ModelingLanguage), c("Unspecified"))
@@ -1714,48 +1333,6 @@ modelinglanguage <- function(rqNum) {
         width = 14, height = 6)
 }
 
-modelType <- function(rqNum) {
-    ModelType <- removeItems(extractAll(DATA_TO_ANALYSIS$RQ6.ModelType), c("Unspecified", "N/A"))
-    ptypes <- sort(unique(ModelType))
-    ModelTypeSummary <- as.data.frame(table(ModelType))
-    RQ_label <- RQ_label_prefix(rqNum)
-    collectRQResults(ModelTypeSummary, RQ_label)
-    orderBarFile <- paste("RQ", rqNum, "_model_type", sep = "")
-    orderBarChart(data = ModelType, xLabel = "Number of model types", yLabel = "Model Type", orderBarFile, width = 14, 
-        height = 10)
-}
-
-modelCategory <- function(rqNum) {
-    Category <- extractAll(DATA_TO_ANALYSIS$RQ6.Category)
-    ptypes <- sort(unique(Category))
-    CategorySummary <- as.data.frame(table(Category))
-    RQ_label <- RQ_label_prefix(rqNum)
-    collectRQResults(CategorySummary, RQ_label)
-    data <- data.frame(category = CategorySummary$Category, value = CategorySummary$Freq)
-    pieChartFile <- paste("RQ", rqNum, "_model_category", sep = "")
-    pieChart(pieChartFile, data, summarizedData = TRUE, w = 6, h = 5)
-}
-
-model_type_category_definition <- function(rqNum) {
-    TABLE = paste(GENERATED_FILES, "/RQ", rqNum, "_model_type_category_definitions.tex", sep = "")
-    unlink(TABLE)
-    sink(TABLE, append = TRUE, split = TRUE)
-    cat("\\begin{tabular} { p{0.22\\textwidth} p{0.75\\textwidth} } \\\\ \n")
-    cat("\\toprule \n")
-    cat("Category & Definition\\\\ \n")
-    cat("\\midrule  \n")
-    for (category in names(model_type_category_mapping)) {
-        definition <- model_type_category_definition_mapping[[category]]
-        if (is.null(definition)) {
-            definition <- "-"
-        }
-        category_label <- str_replace_all(category, "\\n", " ")
-        cat(clean_text_4latex(category_label), " & ", clean_text_4latex(definition), "\\\\ \n", sep = "")
-    }
-    cat("\\bottomrule \n")
-    cat("\\end{tabular} \n")
-    sink()
-}
 
 model_type_category <- function(rqNum) {
     df <- DATA_TO_ANALYSIS %>% select(ID, ModelType = RQ6.ModelType) %>% filter(!(tolower(ModelType) %in% c("n/a", 
@@ -1811,6 +1388,10 @@ stackedBarChart100 <- function(data, item_top_labels = NULL, xLabel = "x", yLabe
     fileName = "default_100_stacked_bar", width = 8, height = 6, reorderBasedOnFreq = TRUE, axisXAngle = 0, axisHjust = 0.5, 
     axisVjust = 1, barwidth = 0.3, textGap = 0.12, showTable = TRUE, x_mult = c(0.1, 0.15), col_set = "Set3") {
     data <- data %>% group_by(Items, Category) %>% summarise(Freq = sum(Freq, na.rm = TRUE), .groups = "drop")
+    if (legendTitle == "MDE Task") {
+        category_levels <- sort(unique(as.character(data$Category)), method = "radix", na.last = NA)
+        data$Category <- factor(data$Category, levels = category_levels)
+    }
     if (!is.factor(data$Category)) {
         data$Category <- as.factor(data$Category)
     }
@@ -1832,6 +1413,7 @@ stackedBarChart100 <- function(data, item_top_labels = NULL, xLabel = "x", yLabe
         ungroup()
     n_cats <- length(unique(data$Category))
     fill_palette <- colorRampPalette(brewer.pal(min(n_cats, 12), col_set))(n_cats)
+    names(fill_palette) <- levels(droplevels(data$Category))
     p <- ggplot(data, aes(x = as.numeric(Items), y = Percentage)) + geom_col(aes(fill = Category), colour = "black", 
         width = barwidth, linewidth = 0.3) + geom_segment(data = data %>% filter(Freq > 0, n_cat > 1), aes(x = as.numeric(Items) + 
         (barwidth/2), xend = as.numeric(Items) + (barwidth/2) + (textGap * 0.7), y = y_mid, yend = y_mid), color = "grey30", 

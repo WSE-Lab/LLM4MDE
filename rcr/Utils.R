@@ -328,6 +328,10 @@ stackedBarChart <- function(data, xLabel = "x", yLabel = "y", legendTitle = "Cat
     width = 8, height = 6, reorderBasedOnFreq = TRUE, globalTotal = NULL, axisXAngle = 0, axisHjust = 0.5, axisVjust = 1, 
     barwidth = 0.3, textGap = 0.12, showTable = TRUE, annotation_labels = NULL, x_mult = c(0.1, 0.15), col_set = "Set3") {
     data <- data %>% group_by(Items, Category) %>% summarise(Freq = sum(Freq, na.rm = TRUE), .groups = "drop")
+    if (grepl("task", legendTitle, ignore.case = TRUE)) {
+        category_levels <- sort(unique(as.character(data$Category)), method = "radix", na.last = NA)
+        data$Category <- factor(data$Category, levels = category_levels)
+    }
     if (!is.factor(data$Category)) {
         data$Category <- as.factor(data$Category)
     }
@@ -351,6 +355,7 @@ stackedBarChart <- function(data, xLabel = "x", yLabel = "y", legendTitle = "Cat
     }
     n_cats <- length(unique(data$Category))
     fill_palette <- colorRampPalette(brewer.pal(min(n_cats, 12), col_set))(n_cats)
+    names(fill_palette) <- levels(droplevels(data$Category))
     p <- ggplot(data, aes(x = as.numeric(Items), y = Freq)) + geom_col(aes(fill = Category), colour = "black", 
         width = barwidth, linewidth = 0.3) + geom_segment(data = data %>% filter(Freq > 0, n_cat > 1), aes(x = as.numeric(Items) + 
         (barwidth/2), xend = as.numeric(Items) + (barwidth/2) + (textGap * 0.7), y = y_mid, yend = y_mid), color = "grey30", 
