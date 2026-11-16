@@ -9,7 +9,7 @@ During the SLR, we have the following data and supporting artifacts available:
 
 ## Reproducing the analysis
 
-The [`rcr/`](rcr/) directory contains the R scripts, bibliography, and generated
+The [`rcr/`](rcr/) directory contains the R scripts and generated
 figures and LaTeX tables for reproducing the review's results.
 
 - [`Search guide`](rcr/README-Search.md): Database-specific search queries for reproducing or extending the literature search.

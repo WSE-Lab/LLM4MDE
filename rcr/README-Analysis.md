@@ -45,7 +45,7 @@ the same installed environment.
 Requires R. Install dependencies once in R:
 
 ```r
-install.packages(c("nombre", "UpSetR", "gridExtra", "bibtex", "ggplot2",
+install.packages(c("nombre", "UpSetR", "gridExtra", "ggplot2",
                    "ggpattern", "ggrepel", "ComplexUpset", "dplyr", "tidyr",
                    "stringr", "tidyverse", "RColorBrewer", "scales"))
 ```
@@ -56,7 +56,7 @@ Open a terminal in this directory and run:
 Rscript LLM4MDE_SLR.R
 ```
 
-Keep `llm4MDE.bib` and `Utils.R` beside the script, and the input CSV at
+Keep `Utils.R` beside the script, and the input CSV at
 `../data/final_selection.csv` relative to this directory.
 Generated figures and LaTeX tables are saved in `generated_files/`.
 
@@ -154,9 +154,7 @@ Related figures and tables share the same RQ prefix; their suffixes distinguish
 the analysis or breakdown shown.
 
 The `.tex` files are table fragments rather than standalone LaTeX documents.
-Rendering them may require packages such as `booktabs` and the bibliography
-configuration used by the surrounding document. Paper citation keys can be
-looked up in [`llm4MDE.bib`](llm4MDE.bib).
+Rendering them may require packages such as `booktabs`.
 
 Existing files with the same names are overwritten when the analysis runs.
 Output filenames retain the analysis RQ numbering, which may differ from the

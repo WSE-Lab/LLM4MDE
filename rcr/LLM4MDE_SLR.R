@@ -4,7 +4,6 @@ library(nombre)
 library(UpSetR)
 library(gridExtra)
 library(grid)
-library(bibtex)
 library(ggplot2)
 library(ggpattern)
 library(ggrepel)
@@ -20,25 +19,17 @@ library(scales)
 
 PAPERS <- "../data/final_selection.csv"
 
-PAPER_BIB_FILE_PATH <- "llm4MDE.bib"
-
 GENERATED_FILES <- "generated_files"
 
 LATEX_DIR <- "."
-
-BIBFILE <- PAPER_BIB_FILE_PATH
 
 YES_EXP = c("Y", "Y*", "YES", "YES*", "[Y]", "[Y*]", "[YES]", "[YES*]")
 
 ALL_DATA <- read.csv(PAPERS, header = TRUE)
 
-ALL_BIB <- bibtex::read.bib(PAPER_BIB_FILE_PATH)
-
 COLLECTION_SELECTED_ROW = "isSelected."
 
 COLLECTION_SNOWBALLING_ROW = "Snowballing."
-
-COLLECTION_BIBINFO_ROW = "BibTex"
 
 ALL_SELECTED <- ALL_DATA
 
@@ -47,8 +38,6 @@ APPROACH_PAPERS = subset(ALL_SELECTED, ALL_SELECTED$RQ3.PaperType == "Proposed m
 Benchmarks_PAPERS = subset(ALL_SELECTED, ALL_SELECTED$RQ3.PaperType == "Benchmarking and evaluation")
 
 TOTAL_NUM_SELECTED_PAPERS <- nrow(ALL_SELECTED)
-
-RESULTS_BIBTEX = paste(GENERATED_FILES, "/selected_paper_bib.bib", sep = "")
 
 DATABASES = c("IEEE", "ACM", "Scopus", "Wiley", "WoS", "Springer")
 
@@ -112,42 +101,6 @@ source("Utils.R")
 
 # ==================== Analysis functions ====================
 
-generateCmdForSelectedPapers <- function() {
-    titles <- ALL_SELECTED$Title
-    indexs <- ALL_SELECTED$ID
-    missingPaper <- c()
-    duplicated <- c()
-    index <- 0
-    for (e in titles) {
-        index <- index + 1
-        eindex <- indexs[index]
-        found <- findPapers(e)
-        if (length(found) >= 1) {
-            if (length(found) > 1) {
-                duplicated <- append(duplicated, e)
-            }
-            id <- paste("\\newcommand{\\paper", formatString(nom_ord(strtoi(eindex))), "}{", found[1], "}", sep = "")
-            cat(id, "\n", sep = "")
-        }
-        else if (length(found) == 0) {
-            missingPaper <- append(missingPaper, e)
-        }
-    }
-    if (length(missingPaper) > 0) {
-        cat("\n\n%=================Missing=================\n", sep = "")
-        for (nr in missingPaper) {
-            cat("%", nr, "\n")
-        }
-    }
-    if (length(duplicated) > 0) {
-        cat("\n\n%=================Duplicated=================\n", sep = "")
-        for (nr in duplicated) {
-            cat("%", nr, "\n")
-        }
-    }
-}
-
-
 getfinalSelectNumByDb <- function(dbName, data_to_analysis) {
     rows <- subset(data_to_analysis, grepl(dbName, data_to_analysis$Source))
     return(nrow(rows))
@@ -183,6 +136,7 @@ group3Analysis <- function() {
     integration_model_type(11, function(x) {
         return(x == 1)
     }, "_GT1")
+    human_in_loop(12)
     human_in_loop_table(12)
     LLM_enhanced(10)
 }
@@ -864,6 +818,19 @@ integration_model_type <- function(rqNum, stop_function, suffix = "") {
     sink()
 }
 
+human_in_loop <- function(rqNum) {
+    df <- DATA_TO_ANALYSIS %>% select(ID, RQ12.InteractionPattern)
+    sub_df_sorted <- df %>% filter(containValidValue(RQ12.InteractionPattern)) %>% group_by(RQ12.InteractionPattern) %>%
+        mutate(frequency = n()) %>% ungroup() %>% arrange(desc(frequency), RQ12.InteractionPattern)
+
+    Items <- extractAllWithGroup(sub_df_sorted$RQ12.InteractionPattern)
+    freq_num <- as.data.frame(table(Items))
+    freq_num <- freq_num[order(freq_num$Items, decreasing = FALSE), ]
+    barChartFile <- paste("RQ", rqNum, "_human_in_the_loop_bar", sep = "")
+    barChart(freq_num, xLabel = "Type of Interaction Pattern", yLabel = "# of Papers", fileName = barChartFile,
+        reorderBasedOnFreq = TRUE, axisXAngle = 0, axisHjust = 0.5, axisVjust = 0.5, barwidth = 0.3, width = 8,
+        height = 4)
+}
 
 human_in_loop_table <- function(rqNum, data = DATA_TO_ANALYSIS) {
     interaction_papers <- data %>% select(ID, Interaction = RQ12.InteractionPattern) %>% filter(containValidValue(Interaction)) %>% 
