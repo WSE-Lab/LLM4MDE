@@ -1,0 +1,64 @@
+# INSTALL
+
+## 1. Prepare Docker
+
+Install and start Docker Desktop on Windows/macOS, or Docker Engine on Linux.
+On Windows, configure Docker Desktop to use Linux containers.
+Verify that the engine is available:
+
+```sh
+docker info
+```
+
+The command should display server information without a connection error.
+
+## 2. Download the analysis image
+
+```sh
+docker pull manzh/llm4mde-r:1.0
+```
+
+The image contains the execution environment and inputs. No image build or
+separate R/package installation is needed. After downloading, verify that R
+can start inside the container:
+
+```sh
+docker run --rm --network none manzh/llm4mde-r:1.0 Rscript -e "print(R.version.string)"
+```
+
+Successful execution prints the R version and exits without an error.
+
+## 3. Run the analysis and export results
+
+Open a terminal in the directory where you want to save the results:
+
+```sh
+docker run --name llm4mde-analysis --network none manzh/llm4mde-r:1.0
+docker cp llm4mde-analysis:/analysis/rcr/generated_files ./outputs
+docker rm llm4mde-analysis
+```
+
+Wait for the analysis to finish successfully before copying results. Use a new
+`outputs` directory to avoid nesting copied directories. Keep the container
+until its results have been copied. The final command removes the container;
+the exported files remain on your computer.
+
+Successful execution produces PDF figures and LaTeX tables in `outputs/`,
+including `RQ1_plot_num_publications_over_year.pdf`. Open this file in a PDF
+viewer to inspect the publication trend. This check confirms execution and
+output generation; comparison with the manuscript is a separate validation step.
+
+For interactive calls to `group1Analysis()` through `group4Analysis()` with
+results saved directly to a mounted output directory, follow
+[Generate results for each perspective with Docker](rcr/README-Analysis.md#generate-results-for-each-perspective-with-docker).
+
+## Troubleshooting
+
+- If `docker info` fails, start Docker and wait for its engine to become ready.
+- If image download fails, check Docker Desktop's proxy and certificate settings
+  and connectivity to Docker Hub. Proxy settings used for building images are
+  not needed for this pre-built-image workflow.
+- If the container name already exists, choose another name in all three
+  commands, or copy any required results from the old container before removing it.
+- If analysis exits with an error, retain the container and inspect its output
+  with `docker logs llm4mde-analysis` before removing it.

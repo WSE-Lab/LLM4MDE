@@ -1,0 +1,32 @@
+# STATUS
+
+This artifact accompanies the paper
+“LLMs for Model-driven Engineering: A Systematic Literature Review”
+(https://doi.org/10.1145/3859883).
+
+We request evaluation for the following badges:
+
+- **Artifacts Available:** The repository provides the study data, analysis
+  scripts, bibliography, and generated results. The prepared execution
+  environment is distributed as `manzh/llm4mde-r:1.0` on Docker Hub.
+
+- **Artifacts Evaluated — Functional:** The artifact includes the inputs,
+  dependencies, and instructions needed to execute the analysis and regenerate
+  its figures and LaTeX tables. The Docker image includes R, the required
+  packages, scripts, and input data; local R execution is also documented.
+
+- **Artifacts Evaluated — Reusable:** The analysis is organized into functions
+  for four perspectives. The documentation explains how to execute these
+  functions interactively and interpret their outputs, and the source code and
+  labelled data are provided for inspection and adaptation.
+
+Supporting materials:
+
+- [REQUIREMENTS](REQUIREMENTS): execution environment and dependencies.
+- [INSTALL](INSTALL): setup instructions and links to execution procedures.
+- [Analysis guide](rcr/README-Analysis.md): full and interactive execution,
+  analysis functions, and interpretation of generated files.
+- [Search guide](rcr/README-Search.md): database-specific search queries.
+- [Study data](data/): search records and the final selection of studies.
+- [Generated results](rcr/generated_files/): PDF figures and LaTeX tables.
+
