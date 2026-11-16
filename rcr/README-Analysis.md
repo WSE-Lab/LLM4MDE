@@ -37,8 +37,7 @@ Keep the container until results have been copied; `docker rm` removes it.
 After pulling the image, the analysis requires no network access.
 
 The image contains the inputs and scripts from its publication date. Local edits
-do not change the image. See the RQ1 example below to run an edited script with
-the same installed environment.
+do not change the image.
 
 ## Running the Analysis with local R
 
@@ -157,8 +156,6 @@ The `.tex` files are table fragments rather than standalone LaTeX documents.
 Rendering them may require packages such as `booktabs`.
 
 Existing files with the same names are overwritten when the analysis runs.
-Output filenames retain the analysis RQ numbering, which may differ from the
-public CSV column numbering.
 
 ## Mapping generated outputs to the paper
 

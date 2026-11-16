@@ -9,7 +9,7 @@ build is required.
 | --- | --- |
 | Container runtime | Docker Desktop on Windows/macOS, or Docker Engine on Linux, installed and running. On Windows, use Linux containers. |
 | Network | Internet access to Docker Hub for the initial image download. Analysis can run offline afterward. |
-| Storage | Sufficient free space for the downloaded image, its container, and generated results; a writable host directory for outputs. |
+| Storage | At least 4 GB of free disk space is recommended for the downloaded image, its container, and generated results; a writable host directory for outputs. |
 | Terminal | PowerShell, Git Bash, or a Linux/macOS shell. Interactive function calls require a terminal supporting interactive Docker sessions. |
 | GPU | No GPU is required for this data-analysis workflow. |
 

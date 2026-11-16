@@ -7,7 +7,7 @@ This artifact accompanies the paper
 We request evaluation for the following badges:
 
 - **Artifacts Available:** The repository provides the study data, analysis
-  scripts, bibliography, and generated results. The prepared execution
+  scripts and generated results. The prepared execution
   environment is distributed as `manzh/llm4mde-r:1.0` on Docker Hub.
 
 - **Artifacts Evaluated — Functional:** The artifact includes the inputs,
