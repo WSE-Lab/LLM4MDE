@@ -7,8 +7,31 @@ During the SLR, we have the following data and supporting artifacts available:
 * [`final_selection.csv`](data/final_selection.csv): This file presents the final set of 235 selected primary studies, derived from keyword searching and snowballing. The file covers raw data used to produce the results reported in the manuscript for the proposed research questions.
 * [`index_reference.pdf`](data/index_reference.pdf): This file maps the IDs in `final_selection.csv` to the corresponding numbered references in the manuscript.
 
-Replication materials can be found in the `rcr/` directory.
+## Reproducing the analysis
 
+The [`rcr/`](rcr/) directory contains the R scripts and generated
+figures and LaTeX tables for reproducing the review's results.
+
+- [`Search guide`](rcr/README-Search.md): Database-specific search queries for reproducing or extending the literature search.
+- [`Analysis guide`](rcr/README-Analysis.md): Run the analysis using Docker or local R, generate results for each of the four perspectives, and read the output files.
+- [`Generated results`](rcr/generated_files/): Figures (`.pdf`) and tables (`.tex`) produced by the analysis.
+
+The pre-built Docker image includes R, the required packages, scripts, and input
+data.
+After installing and starting Docker,
+run the following commands from the directory where you want to save the results:
+
+```sh
+docker pull manzh/llm4mde-r:1.0
+docker run --name llm4mde-analysis manzh/llm4mde-r:1.0
+docker cp llm4mde-analysis:/analysis/rcr/generated_files ./outputs
+docker rm llm4mde-analysis
+```
+
+Wait for the analysis to finish successfully before copying the results. Use a
+new `outputs` directory to avoid nesting copied directories. No local R
+installation or image build is required. See the analysis guide for interactive
+function calls and saving results directly to a mounted output directory.
 
 ## Citation
 
