@@ -47,7 +47,7 @@ jobs:
           files=sorted(p.name for p in out.iterdir() if p.suffix in ['.pdf','.tex'])
           data=lambda p:list(csv.DictReader(p.open(encoding='utf-8-sig')))
           result={'output_count':len(files),'outputs':files,'hitl_bar_present':'RQ12_human_in_the_loop_bar.pdf' in files,'csv_equal':data(root/'image-final_selection.csv')==data(Path('source/data/final_selection.csv'))}
-          result['script_equal']={n:(root/('image-'+n)).read_bytes()==(Path('source/rcr')/n).read_bytes() for n in ['LLM4MDE_SLR.R','Utils.R']}
+          result['script_equal']={n:(root/('image-'+n)).read_text(encoding='utf-8-sig')==(Path('source/rcr')/n).read_text(encoding='utf-8-sig') for n in ['LLM4MDE_SLR.R','Utils.R']}
           result['output_sha256']={f:hashlib.sha256((out/f).read_bytes()).hexdigest() for f in files}
           (root/'checks.json').write_text(json.dumps(result,indent=2))
           print(json.dumps(result,indent=2))
