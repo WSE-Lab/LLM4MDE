@@ -184,15 +184,15 @@ group1Analysis <- function() {
 }
 
 group2Analysis <- function() {
-    modelAnalysis(4)
+    modelAnalysis(6)
     mdeAnalysis(5)
     setask_mdetask_stacked_bar(5)
     setask_mdetask_table(5)
     model_generation(5)
-    mdetask_modellanguage(5)
+    mdetask_modellanguage(6)
     models_modellanguage(5)
     model_generation_modellanguage(5)
-    mdetask_modellanguage_modeltype_grouped_heatmap(DATA_TO_ANALYSIS, 5, first_width = 9, first_height = 11, first_wrap_task_label_width = 17, 
+    mdetask_modellanguage_modeltype_grouped_heatmap(DATA_TO_ANALYSIS, 6, first_width = 9, first_height = 11, first_wrap_task_label_width = 17,
         first_wrap_task_label = TRUE, second_width = 11, second_height = 15, second_tasks_per_row = 4, second_last_row_tasks = 5, 
         second_wrap_task_label_width = 20, second_wrap_task_label = TRUE)
     seAnalysis(6)
@@ -220,14 +220,14 @@ group3Analysis <- function() {
 
 group4Analysis <- function() {
     model_type_category_table(13, data = Benchmarks_PAPERS)
-    eff_metrics(13)
-    mdetask_metric_table(13)
-    cost_metrics(13)
+    eff_metrics(14)
+    mdetask_metric_table(14)
+    cost_metrics(14)
     mdetask_modellanguage_modeltype_grouped_heatmap(Benchmarks_PAPERS, 13, main_tasks = c("Model generation", "Model comprehension"), 
         first_width = 8, first_height = 8, first_wrap_task_label = FALSE, second_width = 10, second_height = 3, 
         second_tasks_per_row = 7, second_last_row_tasks = 7, second_wrap_task_label_width = 16, second_wrap_task_label = TRUE)
     benchmark_vs_proposed_problems(13)
-    baselines(14)
+    baselines(15)
     benchmarks(15)
     replication(16)
     benchmarks_comparison(13)
@@ -304,7 +304,7 @@ rq2And3StackedBar <- function() {
     freq_types_venues_papers <- as.data.frame(table(types_venues_papers$RQ3.VenueType, types_venues_papers$RQ3.PaperType))
     colnames(freq_types_venues_papers) <- c("Items", "Category", "Freq")
     stackedBarChart(data = freq_types_venues_papers, xLabel = "Type of Venue", yLabel = "# of Papers", legendTitle = "Paper Type", 
-        fileName = "RQ2_3_types_venue_paper_stacked_bar_number")
+        fileName = "RQ3_types_venue_paper_stacked_bar_number")
 }
 
 modelAnalysis <- function(rqNum) {
@@ -1885,7 +1885,7 @@ seTable <- function(data, rqNum) {
     freq_df <- as.data.frame(table(SETask))
     freq_df <- freq_df[order(freq_df$Freq, decreasing = TRUE), ]
     RQ_label <- RQ_label_prefix(rqNum)
-    TABLE = paste(GENERATED_FILES, "/RQ5_se.tex", sep = "")
+    TABLE = paste(GENERATED_FILES, "/RQ4_se.tex", sep = "")
     unlink(TABLE)
     sink(TABLE, append = TRUE, split = TRUE)
     cat("\\begin{tabular} {p{0.24\\textwidth}  p{0.26\\textwidth} p{0.02\\textwidth} p{0.48\\textwidth}} \\\\ \n")
