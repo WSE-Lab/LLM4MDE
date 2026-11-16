@@ -17,7 +17,7 @@ figures and LaTeX tables for reproducing the review's results.
 - [`Generated results`](rcr/generated_files/): Figures (`.pdf`) and tables (`.tex`) produced by the analysis.
 
 The pre-built Docker image includes R, the required packages, scripts, and input
-data. 
+data.
 After installing and starting Docker,
 run the following commands from the directory where you want to save the results:
 

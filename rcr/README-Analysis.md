@@ -159,3 +159,61 @@ Rendering them may require packages such as `booktabs`.
 Existing files with the same names are overwritten when the analysis runs.
 Output filenames retain the analysis RQ numbering, which may differ from the
 public CSV column numbering.
+
+## Mapping generated outputs to the paper
+
+The following tables map the generated files in `generated_files/` to the figures and tables in the associated paper. PDF files contain figures; `.tex` files contain table fragments included in the paper.
+
+### Figures
+
+| Generated file | Position in the paper | Content |
+| --- | --- | --- |
+| `RQ1_plot_num_publications_over_year.pdf` | Figure 3 | Number of publications by year from 2017 to October 2025 |
+| `RQ3_types_venue_paper_stacked_bar_number.pdf` | Figure 4 | Number of publications according to types of venue and paper |
+| `RQ5_setask_mdetask_stacked_bar.pdf` | Figure 5 | A 100% stacked bar plot representing the distribution of papers across MDE and SE tasks |
+| `RQ6_modeling_language.pdf` | Figure 6 | Bar plot representing the distribution of papers across each modeling language |
+| `RQ6_mde_language_heatmap.pdf` | Figure 7 | Heatmap illustrating the distribution of modeling languages across different types of MDE tasks |
+| `RQ6_modeltype_by_category.pdf` | Figure 8 | Bar plot representing the distribution of papers associated with each type of models |
+| `RQ6_mdetask_model_language_model_type_grouped_heatmap_main_tasks.pdf` | Figure 9 | Heatmap of model types and modeling languages addressed by LLM-based solutions for MDE tasks |
+| `RQ6_mdetask_model_language_model_type_grouped_heatmap_other_tasks.pdf` | Figure 10 | Heatmap of model types and modeling languages addressed by LLM-based solutions for MDE tasks (continued) |
+| `RQ8_foundation_models_bar.pdf` | Figure 11 | Bar chart presenting the distribution of foundation models employed in the primary studies |
+| `RQ8_mdetask_accessmode_100_stacked_bar.pdf` | Figure 12 | The 100% stacked bar plot showing how LLMs are accessed across MDE tasks |
+| `RQ8_llm_pipeline_pie.pdf` | Figure 13 | Distribution of LLM uses in LLM-based MDE solutions |
+| `RQ9_prompt_technique_complex_upset.pdf` | Figure 14 | Prompt engineering techniques employed in the primary studies |
+| `RQ10_enhanced_venue_mdetask_stacked_bar_number.pdf` | Figure 15 | Enhancement techniques for each type of MDE tasks |
+| `RQ10_enhanced_venue_model_stacked_bar_number_bubble.pdf` | Figure 16 | Enhancement techniques applied to each LLM family |
+| `RQ12_human_in_the_loop_bar.pdf` | Figure 17 | HITL interaction patterns of the LLM-based MDE solutions |
+| `RQ13_mdetask_model_language_model_type_grouped_heatmap_main_tasks.pdf` | Figure 18 | Heatmap of model types and modeling languages addressed by benchmarking and evaluation studies across MDE tasks |
+| `RQ13_mdetask_model_language_model_type_grouped_heatmap_other_tasks.pdf` | Figure 19 | Heatmap of model types and modeling languages addressed by benchmarking and evaluation studies across MDE tasks (continued) |
+| `RQ15_baselines_summary_bar.pdf` | Figure 20 | Bar chart presenting the distribution of types of baselines employed by the primary studies |
+| `RQ16_replication_component_summary_bar.pdf` | Figure 21 | Bar chart representing the distribution of types of artifacts made available as replication materials |
+
+### Main-text tables
+
+| Generated file | Position in the paper | Content |
+| --- | --- | --- |
+| `RQ2_venue.tex` | Table 3 | Number of publications per venue |
+| `RQ4_se.tex` | Table 5 | Papers for tackling SE problems |
+| `RQ7_application_domain.tex` | Table 9 | Application domains of LLM-based MDE solutions |
+| `RQ8_llm_version_size.tex` | Table 10 | Detailed versions and parameter sizes of LLMs used in the primary studies |
+| `RQ11_integration_modeltype_GT1.tex` | Table 11 | LLM Integration with MDE tools and platforms adopted in more than one primary study |
+| `RQ11_integration_modeltype_one.tex` | Table 12 | LLM integration with MDE tools and platforms adopted in only one primary study |
+| `RQ13_proposed_vs_benchmark_mde_task_coverage.tex` | Table 13 | MDE tasks in proposed-approach studies vs. benchmarking and evaluation studies |
+| `RQ13_benchmarks_application_domain.tex` | Table 14 | Application domains addressed in benchmarking and evaluation studies |
+| `RQ13_benchmarks_comparison.tex` | Table 15 | LLM and prompting-technique comparisons in benchmarking and evaluation studies |
+| `RQ14_metrics_semantic.tex` | Table 17 | Semantic effectiveness metrics applied in the primary studies |
+| `RQ14_metrics_nonsemantic.tex` | Table 18 | Syntactic and semantic-syntactic effectiveness metrics applied in the primary studies |
+| `RQ14_mde_task_metrics.tex` | Table 19 | Metrics used for evaluating different MDE tasks in the primary studies |
+| `RQ14_cost_metrics.tex` | Table 20 | Cost metrics applied in the primary studies to assess LLM-based MDE solutions |
+| `RQ16_components_replication.tex` | Table 21 | Replicable artifacts made available in the primary studies |
+| `RQ16_replication.tex` | Table 22 | Summary of available artifacts provided for replication and evaluation |
+
+### Appendix tables
+
+| Generated file | Position in the paper | Content |
+| --- | --- | --- |
+| `RQ5_setask_mdetask.tex` | Table 23 (Appendix) | Primary studies proposing solutions, grouped by MDE and SE task associations |
+| `RQ6_model_type_category.tex` | Table 24 (Appendix) | Primary studies proposing solutions, grouped by model type category |
+| `RQ12_human_in_the_loop_summary.tex` | Table 25 (Appendix) | Primary studies reporting human-in-the-loop interaction patterns |
+| `RQ13_model_type_category.tex` | Table 26 (Appendix) | Benchmarking and evaluation studies, grouped by model type category |
+| `RQ15_baselines.tex` | Table 27 (Appendix) | Primary studies reporting baseline comparisons, grouped by baseline type and MDE task |

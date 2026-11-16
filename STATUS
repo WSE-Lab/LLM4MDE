@@ -29,4 +29,3 @@ Supporting materials:
 - [Search guide](rcr/README-Search.md): database-specific search queries.
 - [Study data](data/): search records and the final selection of studies.
 - [Generated results](rcr/generated_files/): PDF figures and LaTeX tables.
-
