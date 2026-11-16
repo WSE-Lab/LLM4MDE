@@ -1,0 +1,20 @@
+# REQUIREMENTS
+
+The analysis uses the pre-built Docker image `manzh/llm4mde-r:1.0`.
+R, the required packages, analysis scripts, bibliography, and input data are
+included in the image. No host R installation, package installation, or image
+build is required.
+
+| Component | Requirement |
+| --- | --- |
+| Container runtime | Docker Desktop on Windows/macOS, or Docker Engine on Linux, installed and running. On Windows, use Linux containers. |
+| Network | Internet access to Docker Hub for the initial image download. Analysis can run offline afterward. |
+| Storage | Sufficient free space for the downloaded image, its container, and generated results; a writable host directory for outputs. |
+| Terminal | PowerShell, Git Bash, or a Linux/macOS shell. Interactive function calls require a terminal supporting interactive Docker sessions. |
+| GPU | No GPU is required for this data-analysis workflow. |
+
+Docker execution on macOS has been confirmed by the artifact maintainer.
+Minimum CPU, memory, and disk requirements have not been benchmarked.
+
+Use a PDF viewer to read figures and a text editor or LaTeX environment to
+inspect or render the generated tables. These tools are optional for execution.
