@@ -23,9 +23,7 @@ run the following commands from the directory where you want to save the results
 
 ```sh
 docker pull manzh/llm4mde-r:1.0
-docker run --name llm4mde-analysis manzh/llm4mde-r:1.0
-docker cp llm4mde-analysis:/analysis/rcr/generated_files ./outputs
-docker rm llm4mde-analysis
+docker run --rm -v "./outputs:/analysis/rcr/generated_files" manzh/llm4mde-r:1.0
 ```
 
 Wait for the analysis to finish successfully before copying the results. Use a
