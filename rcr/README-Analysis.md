@@ -25,16 +25,12 @@ Run these commands from the directory where you want to save the results.
 They work in PowerShell, Git Bash, and Linux/macOS shells without bind mounts:
 
 ```bash
-docker run --name llm4mde-analysis manzh/llm4mde-r:1.0
-docker cp llm4mde-analysis:/analysis/rcr/generated_files ./outputs
-docker rm llm4mde-analysis
+docker run --rm -v "./outputs:/analysis/rcr/generated_files" manzh/llm4mde-r:1.0
 ```
 
-The first command runs all four perspectives. Wait for it to finish successfully
-before copying results. Use a new `outputs` directory for each run; copying into
-an existing directory can create a nested `generated_files` directory.
-Keep the container until results have been copied; `docker rm` removes it.
-After pulling the image, the analysis requires no network access.
+All 39 generated figures and LaTeX table are automatically 
+saved in the local `outputs` directory.
+
 
 The image contains the inputs and scripts from its publication date. Local edits
 do not change the image. See the RQ1 example below to run an edited script with
